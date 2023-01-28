@@ -3,14 +3,15 @@ var cities = ["London", "Barcelona", "Chicago"];
 
 // displayMovieInfo function re-renders the HTML to display the appropriate content
 function displayWeatherInfo() {
+    $('#today').empty();
 
-    var city = $(this).attr("data-name");
+    var city = $(this).attr("data-name") || $("#search-input").val().trim();
 
     // my APIkey - use the below for future once it's authorized
     var APIKey = "74bcedd33b35e7ab84529cda9f41d95a";
 
     // Here we are building the URL we need to query the database
-    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + userInput + "&appid=" + APIKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
 
     // Creates AJAX call for the specific movie button being clicked
     $.ajax({
@@ -19,25 +20,40 @@ function displayWeatherInfo() {
     }).then(function (response) {
         console.log(response);
 
-        var currentCityEl = $("<div>");
-        // rating.text("Rated " + response.Rated);
+        var todayContainer = $("<div>");
+        todayContainer.attr("id", "todayContainer");
 
-        var currentDateEl = $("<div>");
-        // rating.text("Rated " + response.Rated);
+        var currentCity = response.city.name + ", " + response.city.country;
 
-        var currentIconEl = $("<div>");
-        // rating.text("Rated " + response.Rated);
+        var today = moment();
+        var currentDate = today.format("DD/MM/YYYY");
 
-        // currentIconEl.attr("src", response.Poster);
-        var currenTempEl = $("<div>");
-        // rating.text("Rated " + response.Rated);
+        var currentIconEl = $("<img>");
+        var currentWeatherIcon = response.list[0].weather[0].icon;
+        var weatherIconURL = "http://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png";
+
+        currentIconEl.attr("src", weatherIconURL);
+        currentIconEl.attr("alt", response.list[0].weather[0].description);
+        currentIconEl.css("height", 50)
+
+        var cityDateIconEl = $("<h4>");
+        cityDateIconEl.attr("id", "cityDateIconEl");
+
+        cityDateIconEl.text(currentCity + " (" + currentDate + ")");
+        cityDateIconEl.append(currentIconEl);
+
+        var currentTempEl = $("<div>");
+        // converting Kelvin to Celsius
+        var currentTempCelsius = Math.round(response.list[0].main.temp*10 - 273.15*10)/10;
+        currentTempEl.text("Temp: " + currentTempCelsius + " °C");
 
         var currentWindEl = $("<div>");
-        // rating.text("Rated " + response.Rated);
-
+        // converting m/s to km/h
+        currentSpeedKPH = Math.round(response.list[0].wind.speed * 3.6 * 10)/10
+        currentWindEl.text("Wind  " + currentSpeedKPH + " KPH");
+        
         var currentHumidityEl = $("<div>");
-        // rating.text("Rated " + response.Rated);
-
+        currentHumidityEl.text("Humidity: " + response.list[0].main.humidity + "%");
 
 
 
@@ -45,11 +61,20 @@ function displayWeatherInfo() {
         var formattedDate = releaseMoment.format("MMMM [the] Do [in the superawesome year] YYYY");
         var releaseDate = $("<div>Released " + formattedDate + "</div>");
         var plot = $("<div>" + response.Plot + "</div>");
-        $("#movies-view").prepend($("<hr>"));
-        $("#movies-view").prepend(releaseDate);
-        $("#movies-view").prepend(rating);
-        $("#movies-view").prepend(poster);
-        $("#movies-view").prepend(plot);
+        // $("#today").prepend($("<hr>"));
+        todayContainer.append(cityDateIconEl);
+        todayContainer.append(currentTempEl);
+        todayContainer.append(currentWindEl);
+        todayContainer.append(currentHumidityEl);
+
+        $("#today").append(todayContainer);
+
+        console.log(today.add(1,'day').format("DD/MM/YYYY"))
+
+
+
+
+
     })
 };
 
@@ -87,11 +112,13 @@ function renderButtons() {
   
     // Calling renderButtons which handles the processing of our movie array
     renderButtons();
+    displayWeatherInfo();
+    $("#search-input").val("")
   
   });
   
   // Adding click event listeners to all elements with a class of "movie"
-  $(document).on("click", ".movie", displayWeatherInfo);
+  $(document).on("click", ".city", displayWeatherInfo);
   
   // Calling the renderButtons function to display the initial buttons
   renderButtons();

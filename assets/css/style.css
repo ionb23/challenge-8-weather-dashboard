@@ -1,0 +1,12 @@
+#todayContainer {
+    border: 1px solid black;
+    padding-left: 5px;
+}
+#todayContainer div {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#cityDateIconEl {
+    margin-bottom: -5px;
+}

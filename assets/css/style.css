@@ -1,5 +1,27 @@
+.weather-header {
+    background-color: #2d3e50 !important;
+}
+
+.weather-search {
+    height: 2.5rem;
+}
+
+#search-button {
+    border-radius: 0.25rem;
+}
+
+.city {
+    background-color: #aeaeae !important;
+    color: #444444 !important;
+    border: 0;
+    border-radius: 0.25rem;
+    height: 2rem;
+}
+
+
 #todayContainer {
-    border: 1px solid black;
+    border: 1px solid #444444;
+    border-radius: 0.25rem;
     padding-left: 5px;
 }
 #todayContainer div {
@@ -9,4 +31,27 @@
 
 #cityDateIconEl {
     margin-bottom: -5px;
+}
+
+.forecastDay {
+    background-color: #2d3e50 !important;
+    color: white !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 15px !important;
+    margin-left: 15px !important;
+    margin-bottom: 15px !important;
+}
+
+.card-title {
+    padding: 5px !important;
+    margin: 0 !important;
+}
+
+.card-body  {
+    padding: 0 !important;
+}
+
+.card-body > * {
+    padding: 5px !important;
 }

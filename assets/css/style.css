@@ -1,3 +1,4 @@
+/* adds gradient to header */
 .weather-header {
     background: rgb(16,53,92);
     background: radial-gradient(circle, rgba(16,53,92,1) 50%, rgba(35,155,224,1) 85%);
@@ -35,7 +36,7 @@
 }
 
 .forecastDay {
-    background-color: #2d3e50 !important;
+    background-color: #587ca2 !important;
     color: white !important;
     padding-right: 0 !important;
     padding-left: 0 !important;
@@ -53,6 +54,13 @@
     padding: 0 !important;
 }
 
-.card-body>* {
+.card-body > * {
     padding: 5px !important;
+}
+
+.card-body > img {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: -5px !important;
+    margin-bottom: -5px !important;
 }

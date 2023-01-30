@@ -1,4 +1,4 @@
-# challenge-8-weather-dashboard
+# weather-forecast-dashboard
 
 ## Description 
 

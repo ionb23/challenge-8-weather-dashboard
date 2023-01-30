@@ -1,5 +1,9 @@
 // Initial array of cities
-var cities = [];
+// if "storedCities" key exists in local storage, create storedCities variable with "storedCities" value
+// otherwise if "storedCities" key does not exist in local storage yet, create an empty array to avoid console errors
+if (localStorage.getItem("storedCities") === null) {
+  var storedCities = [];
+} else var storedCities = JSON.parse(localStorage.getItem("storedCities"));
 
 // displayMovieInfo function re-renders the HTML to display the appropriate content
 function displayWeatherInfo() {
@@ -19,7 +23,7 @@ function displayWeatherInfo() {
     url: queryURL,
     method: "GET"
   }).then(function (response) {
-    console.log(response);
+    // console.log(response);
 
     var todayContainer = $("<div>");
     todayContainer.attr("id", "todayContainer");
@@ -51,18 +55,11 @@ function displayWeatherInfo() {
     var currentWindEl = $("<div>");
     // converting m/s to km/h
     currentSpeedKPH = Math.round(response.list[0].wind.speed * 3.6 * 10) / 10
-    currentWindEl.text("Wind  " + currentSpeedKPH + " KPH");
+    currentWindEl.text("Wind:  " + currentSpeedKPH + " KPH");
 
     var currentHumidityEl = $("<div>");
     currentHumidityEl.text("Humidity: " + response.list[0].main.humidity + "%");
 
-
-
-    // var releaseMoment = moment(response.Released, "DD MMM YYYY");
-    // var formattedDate = releaseMoment.format("MMMM [the] Do [in the superawesome year] YYYY");
-    // var releaseDate = $("<div>Released " + formattedDate + "</div>");
-    // var plot = $("<div>" + response.Plot + "</div>");
-    // $("#today").prepend($("<hr>"));
     todayContainer.append(cityDateIconEl);
     todayContainer.append(currentTempEl);
     todayContainer.append(currentWindEl);
@@ -118,8 +115,6 @@ function displayWeatherInfo() {
       },
     ];
 
-    console.log(forecast5DArray);
-
     for (i = 0; i < forecast5DArray.length; i++) {
       var forecastDay = $("<div>");
       forecastDay.addClass("card forecastDay col-xl-2 col-lg-3 col-md-4 col-sm-6");
@@ -148,15 +143,10 @@ function displayWeatherInfo() {
       var forecastWindEl = $("<div>");
       // converting m/s to km/h
       forecastSpeedKPH = Math.round(response.list[forecast5DArray[i].index].wind.speed * 3.6 * 10) / 10
-      forecastWindEl.text("Wind  " + forecastSpeedKPH + " KPH");
+      forecastWindEl.text("Wind:  " + forecastSpeedKPH + " KPH");
 
       var forecastHumidityEl = $("<div>");
       forecastHumidityEl.text("Humidity: " + response.list[forecast5DArray[i].index].main.humidity + "%");
-
-      // --------------------------------------------
-
-
-
 
       forecastDay.append(forecastDate);
       forecastBody.append(forecastIconEl);
@@ -172,37 +162,41 @@ function displayWeatherInfo() {
   })
 };
 
-// Function for displaying city weather data
+// Function for displaying cities searched and/or stored in local storage
 function renderButtons() {
-  // Deletes the movies prior to adding new movies
+  // storedCities = JSON.parse(localStorage.getItem("cities"));
+  // Deletes the cities prior to adding new cities
   // (this is necessary otherwise you will have repeat buttons)
   $("#history").empty();
 
-  // Loops through the array of movies
-  for (var i = 0; i < cities.length; i++) {
+  // Loops through the array of cities
+  for (var i = 0; i < storedCities.length; i++) {
 
-    // Then dynamicaly generates buttons for each movie in the array
-    // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+    // Then dynamicaly generates buttons for each city in the array
     var cityButton = $("<button>");
-    // Adds a class of movie to our button
+    // Adds a class of city to our button, as well as some button and margin classes from Bootstrap
     cityButton.addClass("city btn-secondary mb-3");
-    // Added a data-attribute
-    cityButton.attr("data-name", cities[i]);
-    // Provided the initial button text
-    cityButton.text(cities[i]);
-    // Added the button to the buttons-view div
+    // Adds a data-attribute
+    cityButton.attr("data-name", storedCities[i]);
+    // Provids the button text
+    cityButton.text(storedCities[i]);
+    // Adds the button to the history div
     $("#history").append(cityButton);
   }
 }
 
-// This function handles events where the add movie button is clicked
+// This function handles events where the add city button is clicked
 $("#search-button").on("click", function (event) {
   event.preventDefault();
   // This line of code will grab the input from the textbox
   var city = $("#search-input").val().trim();
 
   // The city from the textbox is then added to our array
-  cities.unshift(city);
+  storedCities.unshift(city);
+
+  // double check this - on page reload it sets local storage to cities, which is empty lol need to set it to local storage if exists
+  // maybe do if localstorage exists then take it if not then create it
+  localStorage.setItem("storedCities", JSON.stringify(storedCities));
 
   // Calling renderButtons which handles the processing of our movie array
   renderButtons();
@@ -214,5 +208,8 @@ $("#search-button").on("click", function (event) {
 // Adding click event listeners to all elements with a class of "movie"
 $(document).on("click", ".city", displayWeatherInfo);
 
-// Calling the renderButtons function to display the initial buttons
-renderButtons();
+// Calling the renderButtons function to display the initial buttons if local storage is not empty
+
+if (storedCities.length > 0) {
+  renderButtons();
+}

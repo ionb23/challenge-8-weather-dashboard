@@ -35,7 +35,7 @@ function displayWeatherInfo() {
 
     var currentIconEl = $("<img>");
     var currentWeatherIcon = response.list[0].weather[0].icon;
-    var currentweatherIconURL = "http://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png";
+    var currentweatherIconURL = "https://openweathermap.org/img/wn/" + currentWeatherIcon + "@2x.png";
 
     currentIconEl.attr("src", currentweatherIconURL);
     currentIconEl.attr("alt", response.list[0].weather[0].description);
@@ -130,7 +130,7 @@ function displayWeatherInfo() {
 
       var forecastIconEl = $("<img>");
       var forecasttWeatherIcon = response.list[forecast5DArray[i].index].weather[0].icon;
-      var forecastweatherIconURL = "http://openweathermap.org/img/wn/" + forecasttWeatherIcon + "@2x.png";
+      var forecastweatherIconURL = "https://openweathermap.org/img/wn/" + forecasttWeatherIcon + "@2x.png";
       forecastIconEl.attr("src", forecastweatherIconURL);
       forecastIconEl.attr("alt", response.list[forecast5DArray[i].index].weather[0].description);
       forecastIconEl.css("height", 50)
